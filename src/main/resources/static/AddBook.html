@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Create Book</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0px;
+		}
+
+		body::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: url('books-5937823_1280.jpg') center/cover no-repeat;
+			filter: blur(2px);
+			z-index: -1;
+		}
+
+		form {
+			display: flex;
+			flex-direction: column;
+			max-width: 400px;
+			margin-left: 100px;
+		margin-top: 50px;
+
+		}
+
+		label {
+			margin-top: 10px;
+		}
+
+		input,
+		textarea {
+			margin-top: 5px;
+			padding: 5px;
+		}
+
+		button {
+			margin-top: 10px;
+			padding: 10px;
+			cursor: pointer;
+		}
+
+		.navbar {
+			background-color: black;
+			overflow: hidden;
+		}
+
+		.navbar a {
+			float: left;
+			display: block;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		}
+
+		.navbar a:hover {
+			background-color: #ddd;
+			color: black;
+		}
+		h2{
+			margin-left: 80px;
+		margin-top: 50px;
+
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="navbar">
+		<a href="getBook.html">Get Book By ID</a>
+		<a href="AllBooks.html">Get All Books</a>
+		<a href="AddBook.html">Add Book</a>
+		<a href="DeleteBook.html">Delete Book</a>
+		<a href="graphql.html">GraphQL</a>
+	</div>
+	
+
+
+	<h2>Please enter below details to add a book</h2>
+
+	<form id="createBookForm">
+		<label for="title">Title:</label>
+		<input type="text" id="title" name="title" required>
+
+		<label for="desc">Description:</label>
+		<textarea id="desc" name="desc" rows="4" required></textarea>
+
+		<label for="author">Author:</label>
+		<input type="text" id="author" name="author" required>
+
+		<label for="price">Price:</label>
+		<input type="number" id="price" name="price" step="0.01" required>
+
+		<label for="pages">Pages:</label>
+		<input type="number" id="pages" name="pages" required>
+
+		<button type="button" onclick="createBook()">Create Book</button>
+	</form>
+
+	<script>
+		function createBook() {
+			const title = document.getElementById('title').value;
+			const desc = document.getElementById('desc').value;
+			const author = document.getElementById('author').value;
+			const price = parseFloat(document.getElementById('price').value);
+			const pages = parseInt(document.getElementById('pages').value);
+
+			const graphqlQuery = `mutation {
+                createBook(book: {
+                    title: "${title}",
+                    desc: "${desc}",
+                    author: "${author}",
+                    price: ${price},
+                    pages: ${pages}
+                }) {
+                    id
+                    title
+                    desc
+                    author
+                    price
+                    pages
+                }
+            }`;
+
+			fetch('http://localhost:8081/graphql', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({query: graphqlQuery}),
+			})
+				.then(response => response.json())
+				.then(data => {
+					// Handle the response data here
+					console.log(data);
+					alert('Book created successfully!');
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Error creating book. Please try again.');
+				});
+		}
+	</script>
+
+</body>
+
+</html>

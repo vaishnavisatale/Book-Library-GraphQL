@@ -1,0 +1,8 @@
+com/vs/entity/Book.class
+com/vs/BookLibraryGraphQlApplication.class
+com/vs/service/BookService.class
+com/vs/repository/BookRepo.class
+com/vs/controller/BookInput.class
+com/vs/controller/BookController.class
+com/vs/service/BookServiceImpl.class
+com/vs/exception/BookNotFoundException.class
